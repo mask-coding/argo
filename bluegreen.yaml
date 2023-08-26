@@ -28,7 +28,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name:  rollout-svc-active
+  name:  rollout-bluegreen-active
 spec:
   selector:
     app:  rollout-bluegreen
@@ -41,7 +41,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name:  rollout-svc-active
+  name:  rollout-bluegreen-preview
 spec:
   selector:
     app:  rollout-bluegreen
