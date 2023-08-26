@@ -22,6 +22,8 @@ spec:
         - containerPort: 8080
   strategy:
      canary:
+       canaryService: rollout-canary-service-canary
+       stableService: rollout-canary-service-stable
        steps:
        - setWeight: 20
        - pause: {}
@@ -35,7 +37,22 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name:  rollout-canary-service
+  name:  rollout-canary-service-stable
+  namespace: default
+spec:
+  selector:
+    app:  rollout-canary
+  type:  LoadBalancer
+  ports:
+  - name:  http
+    port:  80
+    targetPort:  8080
+---
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  rollout-canary-service-canary
   namespace: default
 spec:
   selector:
