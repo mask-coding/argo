@@ -16,14 +16,13 @@ spec:
     spec:
       containers:
       - name: rollouts-demo
-        image: argoproj/rollouts-demo:green
+        image: argoproj/rollouts-demo:blue
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
   strategy:
      canary:
-       canaryService: rollout-canary-service-canary
-       stableService: rollout-canary-service-stable
+       canaryService: canary-demo-preview
        steps:
        - setWeight: 20
        - pause: {duration: 10}
@@ -34,31 +33,22 @@ spec:
        - setWeight: 80
        - pause: {duration: 10}
 ---
-kind: Service
-apiVersion: v1
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name:  rollout-canary-service-stable
-  namespace: default
+  name: canary-demo-preview
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/app-root: /
 spec:
-  selector:
-    app:  rollout-canary
-  type:  LoadBalancer
-  ports:
-  - name:  http
-    port:  80
-    targetPort:  8080
----
----
-kind: Service
-apiVersion: v1
-metadata:
-  name:  rollout-canary-service-canary
-  namespace: default
-spec:
-  selector:
-    app:  rollout-canary
-  type:  LoadBalancer
-  ports:
-  - name:  http
-    port:  80
-    targetPort:  8080
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: canary-demo-preview
+            port:
+              name: http
