@@ -34,7 +34,7 @@ metadata:
 spec:
   selector:
     app:  rollout-bluegreen
-  type:  ClusterIP
+  type:  LoadBalancer
   ports:
   - name:  http
     port:  80
@@ -48,7 +48,7 @@ metadata:
 spec:
   selector:
     app:  rollout-bluegreen
-  type:  ClusterIP
+  type:  LoadBalancer
   ports:
   - name:  http
     port:  80
